@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ChiefCards Kartenwert Schnellcheck v6</title>
-<!-- ChiefCards Kartenwert Schnellcheck v6 -->
+<title>ChiefCards Kartenwert Schnellcheck v7</title>
+<!-- ChiefCards Kartenwert Schnellcheck v7 -->
 <style>
 :root{--blue:#063692;--blue2:#041f5e;--gold:#e9a846;--bg:#f3f6fc;--card:#fff;--text:#111827;--muted:#6b7280;--border:#d9e2f3;--soft:#eef4ff}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -22,6 +22,9 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 .secondary-btn strong{display:block;font-size:20px;line-height:1.1}.secondary-btn span{display:block;margin-top:3px;font-size:12px;color:var(--muted);font-weight:800}
 .option-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:900}
 .field select{min-height:54px;padding:10px 12px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text);font-size:16px;font-weight:800;width:100%}
+.segmented{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.segmented button{min-height:54px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--blue);font-weight:950;cursor:pointer}
+.segmented button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .hint{margin:0;color:var(--muted);font-size:14px;line-height:1.45}.chips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .chip{min-height:62px;border:1px solid var(--border);background:var(--soft);color:var(--blue);border-radius:18px;padding:12px 14px;font-size:19px;text-align:center}
 .recent-list{display:grid;gap:10px}.recent-item{width:100%;border:1px solid var(--border);background:#fbfcff;border-radius:18px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;text-align:left}
@@ -56,12 +59,12 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 </div>
 <div class="option-grid">
 <div class="field"><label for="cardmarketLang">Cardmarket-Seite</label><select id="cardmarketLang"><option value="de" selected>Deutsch</option><option value="en">Englisch</option></select></div>
-<div class="field"><label for="cmCardLanguageV6">Kartensprache</label><select id="cmCardLanguageV6"><option value="3" selected>Deutsch</option><option value="1">Englisch</option><option value="7">Japanisch</option><option value="11">Chinesisch</option><option value="10">Koreanisch</option><option value="">Alle Sprachen</option></select></div>
+<div class="field"><label>Kartensprache</label><input type="hidden" id="cmCardLanguageValue" value="3"><div class="segmented" id="languageButtons"><button type="button" data-lang="3" class="active">Deutsch</button><button type="button" data-lang="1">Englisch</button><button type="button" data-lang="7">Japanisch</button><button type="button" data-lang="11">Chinesisch</button><button type="button" data-lang="10">Koreanisch</button><button type="button" data-lang="">Alle</button></div></div>
 <div class="field"><label for="sellerCountry">Verkäuferstandort</label><select id="sellerCountry"><option value="7" selected>Deutschland</option><option value="">Alle Länder</option><option value="1">Österreich</option><option value="23">Niederlande</option><option value="12">Frankreich</option><option value="17">Italien</option><option value="10">Spanien</option><option value="4">Schweiz</option><option value="13">UK</option></select></div>
 <div class="field"><label for="minCondition">Mindestzustand</label><select id="minCondition"><option value="2" selected>Near Mint oder besser</option><option value="1">Mint</option><option value="3">Excellent oder besser</option><option value="4">Good oder besser</option><option value="5">Good oder schlechter</option><option value="">Alle Zustände</option></select></div>
 <div class="field"><label for="openMode">Öffnen</label><select id="openMode"><option value="new" selected>neuer Tab</option><option value="same">gleicher Tab</option></select></div>
 </div>
-<p class="hint">Standard: deutsche Cardmarket-Seite, deutsche Karten, Verkäuferstandort Deutschland und mindestens Near Mint. Du kannst auch eine Cardmarket-Produkt-URL einfügen, dann hängt das Tool die Filter direkt an diese URL an.</p>
+<p class="hint">Standard: deutsche Cardmarket-Seite, deutsche Karten, Verkäuferstandort Deutschland und mindestens Near Mint. Du kannst auch eine Cardmarket-Produkt-URL einfügen, dann hängt das Tool die Filter direkt an diese URL an. Version 7 nutzt feste Sprachbuttons statt Dropdown.</p>
 </form>
 </section>
 <section class="card"><h2 class="section-title">Schnelle Zusätze</h2><div class="chips-grid">
@@ -73,13 +76,13 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 <div class="toast" id="toast">Geöffnet</div>
 <script>
 (function(){
-const queryInput=document.getElementById("query"),form=document.getElementById("searchForm"),cmSticky=document.getElementById("cmSticky"),ebaySticky=document.getElementById("ebaySticky"),clearInput=document.getElementById("clearInput"),recentList=document.getElementById("recentList"),recentCard=document.getElementById("recentCard"),clearRecent=document.getElementById("clearRecent"),toast=document.getElementById("toast"),openModeSelect=document.getElementById("openMode"),cmLangSelect=document.getElementById("cardmarketLang"),cardLanguageSelect=document.getElementById("cmCardLanguageV6"),sellerCountrySelect=document.getElementById("sellerCountry"),minConditionSelect=document.getElementById("minCondition");
+const queryInput=document.getElementById("query"),form=document.getElementById("searchForm"),cmSticky=document.getElementById("cmSticky"),ebaySticky=document.getElementById("ebaySticky"),clearInput=document.getElementById("clearInput"),recentList=document.getElementById("recentList"),recentCard=document.getElementById("recentCard"),clearRecent=document.getElementById("clearRecent"),toast=document.getElementById("toast"),openModeSelect=document.getElementById("openMode"),cmLangSelect=document.getElementById("cardmarketLang"),cardLanguageValue=document.getElementById("cmCardLanguageValue"),languageButtons=document.getElementById("languageButtons"),sellerCountrySelect=document.getElementById("sellerCountry"),minConditionSelect=document.getElementById("minCondition");
 const STORAGE_KEY="ccCardValueRecent";
 function focusSearch(){setTimeout(()=>{queryInput.focus();queryInput.select()},120)}
 function cleanQuery(){return queryInput.value.trim()}
 function enc(v){return encodeURIComponent(v)}
 function cmBase(){return cmLangSelect.value==="de"?"https://www.cardmarket.com/de/Pokemon":"https://www.cardmarket.com/en/Pokemon"}
-function getSelectedCardLanguage(){return cardLanguageSelect ? String(cardLanguageSelect.value || "") : ""}
+function getSelectedCardLanguage(){return cardLanguageValue ? String(cardLanguageValue.value || "") : ""}
 function updatePreview(){const p=document.getElementById("cmPreview");if(!p)return;const language=getSelectedCardLanguage()||"alle";const country=sellerCountrySelect.value||"alle";const condition=minConditionSelect.value||"alle";p.textContent="Aktive Cardmarket-Parameter: language="+language+" · sellerCountry="+country+" · minCondition="+condition}
 function cmFilterParams(){const params=new URLSearchParams();params.set("searchString",cleanQuery());const language=getSelectedCardLanguage();if(language)params.set("language",language);if(sellerCountrySelect.value)params.set("sellerCountry",sellerCountrySelect.value);if(minConditionSelect.value)params.set("minCondition",minConditionSelect.value);return params.toString()}
 function appendCmFiltersToUrl(url){try{const u=new URL(url);const language=getSelectedCardLanguage();if(language)u.searchParams.set("language",language);if(sellerCountrySelect.value)u.searchParams.set("sellerCountry",sellerCountrySelect.value);if(minConditionSelect.value)u.searchParams.set("minCondition",minConditionSelect.value);return u.toString()}catch(error){return url}}
@@ -98,7 +101,8 @@ document.querySelectorAll("[data-source]").forEach(b=>b.addEventListener("click"
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>appendText(b.dataset.add)));
 cmSticky.addEventListener("click",()=>openSource("cardmarket"));ebaySticky.addEventListener("click",()=>openSource("ebaySold"));clearInput.addEventListener("click",()=>{queryInput.value="";focusSearch()});
 clearRecent.addEventListener("click",()=>{localStorage.removeItem(STORAGE_KEY);renderRecent();focusSearch()});
-[cardLanguageSelect,sellerCountrySelect,minConditionSelect].forEach(el=>{if(el)el.addEventListener("change",updatePreview)});
+if(languageButtons){languageButtons.querySelectorAll("[data-lang]").forEach(btn=>btn.addEventListener("click",()=>{languageButtons.querySelectorAll("[data-lang]").forEach(b=>b.classList.remove("active"));btn.classList.add("active");cardLanguageValue.value=btn.dataset.lang;updatePreview()}))}
+[sellerCountrySelect,minConditionSelect].forEach(el=>{if(el)el.addEventListener("change",updatePreview)});
 updatePreview();
 renderRecent();focusSearch();
 })();
