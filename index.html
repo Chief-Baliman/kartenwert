@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ChiefCards Kartenwert Schnellcheck v12</title>
-<!-- ChiefCards Kartenwert Schnellcheck v12 -->
+<title>ChiefCards Kartenwert Schnellcheck v13</title>
+<!-- ChiefCards Kartenwert Schnellcheck v13 -->
 <style>
 :root{--blue:#063692;--blue2:#041f5e;--gold:#e9a846;--bg:#f3f6fc;--card:#fff;--text:#111827;--muted:#6b7280;--border:#d9e2f3;--soft:#eef4ff}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -25,7 +25,7 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 .segmented{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .segmented button{min-height:54px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--blue);font-weight:950;cursor:pointer}
 .segmented button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.hint{margin:0;color:var(--muted);font-size:14px;line-height:1.45}.url-helper{display:grid;gap:10px;margin-top:4px}.url-helper input{width:100%;min-height:54px;padding:10px 12px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text);font-size:15px;font-weight:750}.url-helper-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{margin:0;color:var(--muted);font-size:14px;line-height:1.45}.status-line{font-weight:1000;color:#063692;background:#eef4ff;border:1px solid #d9e2f3;border-radius:14px;padding:10px 12px}.recent-icon{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:999px;margin-right:8px;font-size:14px;font-weight:1000}.recent-icon.cache{background:#dcfce7;color:#14532d}.recent-icon.serper{background:#fff8e8;color:#7c4a00}.recent-icon.manual{background:#eef4ff;color:#063692}.recent-left{display:flex;align-items:center;gap:0;min-width:0}.recent-left strong{overflow:hidden;text-overflow:ellipsis}.url-helper{display:grid;gap:10px;margin-top:4px}.url-helper input{width:100%;min-height:54px;padding:10px 12px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text);font-size:15px;font-weight:750}.url-helper-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .chip{min-height:62px;border:1px solid var(--border);background:var(--soft);color:var(--blue);border-radius:18px;padding:12px 14px;font-size:19px;text-align:center}
 .recent-list{display:grid;gap:10px}.recent-item{width:100%;border:1px solid var(--border);background:#fbfcff;border-radius:18px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;text-align:left}
 .recent-item strong{font-size:18px;line-height:1.2}.recent-item span{color:var(--blue);font-size:16px;font-weight:1000;white-space:nowrap}
@@ -65,6 +65,7 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 <div class="field"><label for="openMode">Öffnen</label><select id="openMode"><option value="new" selected>neuer Tab</option><option value="same">gleicher Tab</option></select></div>
 </div>
 <p class="hint">Standard: deutsche Cardmarket-Seite, deutsche Karten, Verkäuferstandort Deutschland und mindestens Near Mint. Du kannst auch eine Cardmarket-Produkt-URL einfügen, dann hängt das Tool die Filter direkt an diese URL an. Version 11 nutzt den Cloudflare Worker: Suchbegriff rein, passender Cardmarket-Treffer wird gesucht, Filter werden angehängt und direkt geöffnet.</p>
+<p class="status-line" id="lastAccessStatus">Letzter Zugriff: noch keiner</p>
 <p class="hint" id="cmPreview" style="font-weight:1000;color:#063692;background:#eef4ff;border:1px solid #d9e2f3;border-radius:14px;padding:10px 12px;"></p>
 </form>
 </section>
@@ -96,7 +97,7 @@ function cleanQuery(){return queryInput.value.trim()}
 function enc(v){return encodeURIComponent(v)}
 function cmBase(){return cmLangSelect.value==="de"?"https://www.cardmarket.com/de/Pokemon":"https://www.cardmarket.com/en/Pokemon"}
 function getSelectedCardLanguage(){const active=languageButtons ? languageButtons.querySelector("button.active") : null;if(!active)return "3";const txt=(active.textContent||"").trim().toLowerCase();if(txt==="englisch")return "1";if(txt==="deutsch")return "3";if(txt==="japanisch")return "7";if(txt==="chinesisch")return "11";if(txt==="koreanisch")return "10";if(txt==="alle")return "";return String(active.getAttribute("data-lang")||"3")}
-function updatePreview(){const p=document.getElementById("cmPreview");if(!p)return;const language=getSelectedCardLanguage()||"alle";const country=sellerCountrySelect.value||"alle";const condition=minConditionSelect.value||"alle";p.textContent="V12 Worker aktiv: language="+language+" · sellerCountry="+country+" · minCondition="+condition}
+function updatePreview(){const p=document.getElementById("cmPreview");if(!p)return;const language=getSelectedCardLanguage()||"alle";const country=sellerCountrySelect.value||"alle";const condition=minConditionSelect.value||"alle";p.textContent="V13 Worker aktiv: language="+language+" · sellerCountry="+country+" · minCondition="+condition}
 function cmFilterParams(){const parts=["searchString="+enc(cleanQuery())];const language=getSelectedCardLanguage();if(sellerCountrySelect.value)parts.push("sellerCountry="+enc(sellerCountrySelect.value));if(language)parts.push("language="+enc(language));if(minConditionSelect.value)parts.push("minCondition="+enc(minConditionSelect.value));return parts.join("&")}
 function appendCmFiltersToUrl(url){try{const u=new URL(url);const language=getSelectedCardLanguage();if(language)u.searchParams.set("language",language);if(sellerCountrySelect.value)u.searchParams.set("sellerCountry",sellerCountrySelect.value);if(minConditionSelect.value)u.searchParams.set("minCondition",minConditionSelect.value);return u.toString()}catch(error){return url}}
 function getFilteredProductUrl(){const raw=(productUrlInput&&productUrlInput.value?productUrlInput.value.trim():"")||cleanQuery();if(!/^https?:\/\/(www\.)?cardmarket\.com\//i.test(raw))return "";return appendCmFiltersToUrl(raw)}
@@ -132,6 +133,8 @@ try{
 setLoading(true);
 const result=await resolveCardmarketWithWorker();
 if(!result||!result.filteredUrl){throw new Error("Cardmarket-Treffer nicht gefunden")}
+setLastAccessStatus(result);
+updateRecentSource(q,result.source);
 if(result.source==="cache")showToast("Aus Cache geöffnet");
 else if(result.source==="serper")showToast("Neu gesucht und gespeichert");
 else showToast("Direkte URL geöffnet");
@@ -153,11 +156,14 @@ if(btn.tagName==="BUTTON")btn.disabled=isLoading;
 });
 }
 function appendText(text){const current=cleanQuery(),parts=current?current.split(/\s+/):[],lower=parts.map(p=>p.toLowerCase());text.split(/\s+/).forEach(p=>{if(!lower.includes(p.toLowerCase())){parts.push(p);lower.push(p.toLowerCase())}});queryInput.value=parts.join(" ");focusSearch()}
-function getRecent(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch(e){return[]}}
+function getRecent(){try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");return raw.map(item=>typeof item==="string"?{query:item,source:"unknown"}:item).filter(item=>item&&item.query)}catch(e){return[]}}
 function setRecent(items){localStorage.setItem(STORAGE_KEY,JSON.stringify(items.slice(0,8)))}
-function addRecent(q){const c=q.trim();if(!c)return;const items=getRecent().filter(i=>i.toLowerCase()!==c.toLowerCase());items.unshift(c);setRecent(items);renderRecent()}
-function renderRecent(){const items=getRecent();recentCard.classList.toggle("hidden",!items.length);recentList.innerHTML="";items.forEach(item=>{const b=document.createElement("button");b.type="button";b.className="recent-item";b.innerHTML="<strong></strong><span>Cardmarket</span>";b.querySelector("strong").textContent=item;b.addEventListener("click",()=>{queryInput.value=item;openSource("cardmarket")});recentList.appendChild(b)})}
+function sourceMeta(source){if(source==="cache")return{icon:"✓",label:"Cache",cls:"cache"};if(source==="serper")return{icon:"●",label:"Neu",cls:"serper"};if(source==="manual")return{icon:"M",label:"Manuell",cls:"manual"};if(source==="direct-url")return{icon:"↗",label:"Direkt",cls:"manual"};return{icon:"?",label:"Offen",cls:"manual"}}
+function addRecent(q,source="unknown"){const c=q.trim();if(!c)return;const items=getRecent().filter(i=>i.query.toLowerCase()!==c.toLowerCase());items.unshift({query:c,source,ts:new Date().toISOString()});setRecent(items);renderRecent()}
+function updateRecentSource(q,source){const c=(q||"").trim();if(!c)return;const items=getRecent();const item=items.find(i=>i.query.toLowerCase()===c.toLowerCase());if(item){item.source=source;item.ts=new Date().toISOString();setRecent(items);renderRecent()}}
+function renderRecent(){const items=getRecent();recentCard.classList.toggle("hidden",!items.length);recentList.innerHTML="";items.forEach(item=>{const meta=sourceMeta(item.source);const b=document.createElement("button");b.type="button";b.className="recent-item";b.innerHTML='<span class="recent-left"><span class="recent-icon '+meta.cls+'">'+meta.icon+'</span><strong></strong></span><span></span>';b.querySelector("strong").textContent=item.query;b.querySelector(".recent-item > span:last-child").textContent=meta.label;b.addEventListener("click",()=>{queryInput.value=item.query;openSource("cardmarket")});recentList.appendChild(b)})}
 function showToast(t){toast.textContent=t;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1500)}
+function setLastAccessStatus(result){const el=document.getElementById("lastAccessStatus");if(!el)return;if(!result){el.textContent="Letzter Zugriff: noch keiner";return}if(result.source==="cache")el.textContent="Letzter Zugriff: Cache ✓ · keine Serper-Anfrage verbraucht";else if(result.source==="serper")el.textContent="Letzter Zugriff: Neu gesucht und gespeichert ● · Serper-Anfrage verbraucht";else if(result.source==="direct-url")el.textContent="Letzter Zugriff: direkte Cardmarket-URL ↗";else el.textContent="Letzter Zugriff: "+(result.source||"unbekannt")}
 form.addEventListener("submit",e=>{e.preventDefault();openSource("cardmarket")});
 document.querySelectorAll("[data-source]").forEach(b=>b.addEventListener("click",()=>openSource(b.dataset.source)));
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>appendText(b.dataset.add)));
@@ -170,6 +176,8 @@ copyCmUrl.addEventListener("click",async()=>{
 try{
 const result=await resolveCardmarketWithWorker();
 if(!result||!result.filteredUrl){showToast("Bitte Suchbegriff eingeben");return}
+setLastAccessStatus(result);
+updateRecentSource(cleanQuery(),result.source);
 await navigator.clipboard.writeText(result.filteredUrl);
 showToast("Gefilterte CM-URL kopiert");
 }catch(error){
@@ -188,6 +196,8 @@ const response=await fetch(CARDMARKET_WORKER+"/learn",{method:"POST",headers:{"C
 const data=await response.json().catch(()=>null);
 if(!response.ok||!data||!data.ok)throw new Error((data&&data.error)||"Speichern fehlgeschlagen");
 showToast("Gespeichert: "+(data.learnedAliases?.length||0)+" Aliase");
+addRecent(query,"manual");
+setLastAccessStatus({source:"manual"});
 learnQuery.value="";
 learnUrl.value="";
 }catch(error){
