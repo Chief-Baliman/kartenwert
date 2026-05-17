@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ChiefCards Kartenwert Schnellcheck v9</title>
-<!-- ChiefCards Kartenwert Schnellcheck v9 -->
+<title>ChiefCards Kartenwert Schnellcheck v11</title>
+<!-- ChiefCards Kartenwert Schnellcheck v11 -->
 <style>
 :root{--blue:#063692;--blue2:#041f5e;--gold:#e9a846;--bg:#f3f6fc;--card:#fff;--text:#111827;--muted:#6b7280;--border:#d9e2f3;--soft:#eef4ff}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -17,7 +17,7 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 .search-input{width:100%;min-height:176px;border:3px solid #e7b659;border-radius:26px;padding:20px 18px;font-size:34px;line-height:1.06;font-weight:900;background:#fff;color:var(--text);box-shadow:inset 0 0 0 4px rgba(233,168,70,.16)}
 .search-input::placeholder{color:#a3a3a3;font-weight:850}.search-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 5px rgba(233,168,70,.18),inset 0 0 0 4px rgba(233,168,70,.16)}
 .primary-btn,.secondary-btn,.mini-btn,.chip{border:0;cursor:pointer;font-weight:1000;transition:transform .04s ease}.primary-btn:active,.secondary-btn:active,.mini-btn:active,.chip:active{transform:scale(.99)}
-.primary-btn{width:100%;min-height:86px;padding:18px 20px;background:var(--gold);color:#13213d;border-radius:22px;font-size:25px;box-shadow:0 14px 28px rgba(233,168,70,.28)}
+.primary-btn{width:100%;min-height:86px;padding:18px 20px;background:var(--gold);color:#13213d;border-radius:22px;font-size:25px;box-shadow:0 14px 28px rgba(233,168,70,.28)}.primary-btn.loading,.secondary-btn.loading{opacity:.72;pointer-events:none}
 .source-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.secondary-btn{min-height:72px;padding:14px 16px;background:#f1f5ff;color:var(--blue);border:1px solid var(--border);border-radius:22px;font-size:19px}
 .secondary-btn strong{display:block;font-size:20px;line-height:1.1}.secondary-btn span{display:block;margin-top:3px;font-size:12px;color:var(--muted);font-weight:800}
 .option-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:900}
@@ -25,7 +25,7 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 .segmented{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .segmented button{min-height:54px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--blue);font-weight:950;cursor:pointer}
 .segmented button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.hint{margin:0;color:var(--muted);font-size:14px;line-height:1.45}.chips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{margin:0;color:var(--muted);font-size:14px;line-height:1.45}.url-helper{display:grid;gap:10px;margin-top:4px}.url-helper input{width:100%;min-height:54px;padding:10px 12px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text);font-size:15px;font-weight:750}.url-helper-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .chip{min-height:62px;border:1px solid var(--border);background:var(--soft);color:var(--blue);border-radius:18px;padding:12px 14px;font-size:19px;text-align:center}
 .recent-list{display:grid;gap:10px}.recent-item{width:100%;border:1px solid var(--border);background:#fbfcff;border-radius:18px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;text-align:left}
 .recent-item strong{font-size:18px;line-height:1.2}.recent-item span{color:var(--blue);font-size:16px;font-weight:1000;white-space:nowrap}
@@ -46,7 +46,7 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 <input id="query" class="search-input" type="search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="z. B. pikachu 123 psa 10">
 <button class="primary-btn" type="submit">Cardmarket DE öffnen</button>
 <div class="source-grid">
-<button class="secondary-btn" type="button" data-source="cardmarket"><strong>Cardmarket</strong><span>EU Marktpreise</span></button>
+<button class="secondary-btn" type="button" data-source="cardmarket"><strong>Cardmarket</strong><span>Auto-Treffer</span></button>
 <button class="secondary-btn" type="button" data-source="ebaySold"><strong>eBay Sold</strong><span>echte Verkäufe</span></button>
 <button class="secondary-btn" type="button" data-source="130point"><strong>130point</strong><span>Sold Recherche</span></button>
 <button class="secondary-btn" type="button" data-source="googleCardmarket"><strong>CM Google</strong><span>erster Treffer</span></button>
@@ -64,7 +64,7 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 <div class="field"><label for="minCondition">Mindestzustand</label><select id="minCondition"><option value="2" selected>Near Mint oder besser</option><option value="1">Mint</option><option value="3">Excellent oder besser</option><option value="4">Good oder besser</option><option value="5">Good oder schlechter</option><option value="">Alle Zustände</option></select></div>
 <div class="field"><label for="openMode">Öffnen</label><select id="openMode"><option value="new" selected>neuer Tab</option><option value="same">gleicher Tab</option></select></div>
 </div>
-<p class="hint">Standard: deutsche Cardmarket-Seite, deutsche Karten, Verkäuferstandort Deutschland und mindestens Near Mint. Du kannst auch eine Cardmarket-Produkt-URL einfügen, dann hängt das Tool die Filter direkt an diese URL an. Version 9 zeigt dir die erzeugte URL vor dem Öffnen sichtbar an.</p>
+<p class="hint">Standard: deutsche Cardmarket-Seite, deutsche Karten, Verkäuferstandort Deutschland und mindestens Near Mint. Du kannst auch eine Cardmarket-Produkt-URL einfügen, dann hängt das Tool die Filter direkt an diese URL an. Version 11 nutzt den Cloudflare Worker: Suchbegriff rein, passender Cardmarket-Treffer wird gesucht, Filter werden angehängt und direkt geöffnet.</p>
 <p class="hint" id="cmPreview" style="font-weight:1000;color:#063692;background:#eef4ff;border:1px solid #d9e2f3;border-radius:14px;padding:10px 12px;"></p>
 </form>
 </section>
@@ -79,18 +79,62 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 (function(){
 const queryInput=document.getElementById("query"),form=document.getElementById("searchForm"),cmSticky=document.getElementById("cmSticky"),ebaySticky=document.getElementById("ebaySticky"),clearInput=document.getElementById("clearInput"),copyCmUrl=document.getElementById("copyCmUrl"),recentList=document.getElementById("recentList"),recentCard=document.getElementById("recentCard"),clearRecent=document.getElementById("clearRecent"),toast=document.getElementById("toast"),openModeSelect=document.getElementById("openMode"),cmLangSelect=document.getElementById("cardmarketLang"),languageButtons=document.getElementById("languageButtons"),sellerCountrySelect=document.getElementById("sellerCountry"),minConditionSelect=document.getElementById("minCondition");
 const STORAGE_KEY="ccCardValueRecent";
+const CARDMARKET_WORKER="https://chiefcards-cardmarket-search.chiefbaliman.workers.dev";
 function focusSearch(){setTimeout(()=>{queryInput.focus();queryInput.select()},120)}
 function cleanQuery(){return queryInput.value.trim()}
 function enc(v){return encodeURIComponent(v)}
 function cmBase(){return cmLangSelect.value==="de"?"https://www.cardmarket.com/de/Pokemon":"https://www.cardmarket.com/en/Pokemon"}
 function getSelectedCardLanguage(){const active=languageButtons ? languageButtons.querySelector("button.active") : null;if(!active)return "3";const txt=(active.textContent||"").trim().toLowerCase();if(txt==="englisch")return "1";if(txt==="deutsch")return "3";if(txt==="japanisch")return "7";if(txt==="chinesisch")return "11";if(txt==="koreanisch")return "10";if(txt==="alle")return "";return String(active.getAttribute("data-lang")||"3")}
-function updatePreview(){const p=document.getElementById("cmPreview");if(!p)return;const language=getSelectedCardLanguage()||"alle";const country=sellerCountrySelect.value||"alle";const condition=minConditionSelect.value||"alle";const url=buildUrl("cardmarket");p.textContent="V9 URL-Vorschau: language="+language+" · sellerCountry="+country+" · minCondition="+condition+" | "+url}
+function updatePreview(){const p=document.getElementById("cmPreview");if(!p)return;const language=getSelectedCardLanguage()||"alle";const country=sellerCountrySelect.value||"alle";const condition=minConditionSelect.value||"alle";p.textContent="V11 Worker aktiv: language="+language+" · sellerCountry="+country+" · minCondition="+condition}
 function cmFilterParams(){const parts=["searchString="+enc(cleanQuery())];const language=getSelectedCardLanguage();if(sellerCountrySelect.value)parts.push("sellerCountry="+enc(sellerCountrySelect.value));if(language)parts.push("language="+enc(language));if(minConditionSelect.value)parts.push("minCondition="+enc(minConditionSelect.value));return parts.join("&")}
 function appendCmFiltersToUrl(url){try{const u=new URL(url);const language=getSelectedCardLanguage();if(language)u.searchParams.set("language",language);if(sellerCountrySelect.value)u.searchParams.set("sellerCountry",sellerCountrySelect.value);if(minConditionSelect.value)u.searchParams.set("minCondition",minConditionSelect.value);return u.toString()}catch(error){return url}}
+function getFilteredProductUrl(){const raw=(productUrlInput&&productUrlInput.value?productUrlInput.value.trim():"")||cleanQuery();if(!/^https?:\/\/(www\.)?cardmarket\.com\//i.test(raw))return "";return appendCmFiltersToUrl(raw)}
 function cmGoogleQuery(){return "site:cardmarket.com/de/Pokemon/Products/Singles "+cleanQuery()+" Cardmarket"}
 function buildUrl(source){const q=cleanQuery();if(!q)return "";const e=enc(q);if(/^https?:\/\/(www\.)?cardmarket\.com\//i.test(q))return appendCmFiltersToUrl(q);if(source==="cardmarket")return cmBase()+"/Products/Search?"+cmFilterParams();if(source==="googleCardmarket")return "https://www.google.com/search?q="+enc(cmGoogleQuery());if(source==="ebaySold")return "https://www.ebay.de/sch/i.html?_nkw="+e+"&_sacat=0&LH_Complete=1&LH_Sold=1";if(source==="ebayActive")return "https://www.ebay.de/sch/i.html?_nkw="+e+"&_sacat=0";if(source==="130point")return "https://130point.com/sales/?search="+e;if(source==="pricecharting")return "https://www.pricecharting.com/search-products?q="+e+"&type=prices";if(source==="psaPop")return "https://www.psacard.com/pop/search?term="+e;if(source==="googleImages")return "https://www.google.com/search?tbm=isch&q="+enc(q+" pokemon card");return cmBase()+"/Products/Search?"+cmFilterParams()}
-function openUrl(url){if(!url){showToast("Bitte Suchbegriff eingeben");focusSearch();return}if(openModeSelect.value==="new")window.open(url,"_blank","noopener,noreferrer");else window.location.href=url}
-function openSource(source){const q=cleanQuery();if(!q){showToast("Bitte Suchbegriff eingeben");focusSearch();return}addRecent(q);openUrl(buildUrl(source))}
+async function resolveCardmarketWithWorker(){
+const query=cleanQuery();
+if(!query)return "";
+if(/^https?:\/\/(www\.)?cardmarket\.com\//i.test(query))return appendCmFiltersToUrl(query);
+const params=new URLSearchParams();
+params.set("q",query);
+const language=getSelectedCardLanguage();
+if(language)params.set("language",language);
+if(sellerCountrySelect.value)params.set("sellerCountry",sellerCountrySelect.value);
+if(minConditionSelect.value)params.set("minCondition",minConditionSelect.value);
+const response=await fetch(CARDMARKET_WORKER+"/?"+params.toString(),{method:"GET"});
+const data=await response.json().catch(()=>null);
+if(!response.ok||!data||!data.ok||!data.filteredUrl){
+const msg=(data&&data.error)?data.error:"Cardmarket-Treffer nicht gefunden";
+throw new Error(msg);
+}
+return data.filteredUrl;
+}
+function openUrl(url){if(!url){showToast("Bitte Suchbegriff eingeben");focusSearch();return}if(openModeSelect.value==="new"){window.open(url,"_blank","noopener,noreferrer");setTimeout(()=>setLoading(false),500)}else window.location.href=url}
+async function openSource(source){
+const q=cleanQuery();
+if(!q){showToast("Bitte Suchbegriff eingeben");focusSearch();return}
+addRecent(q);
+if(source==="cardmarket"){
+try{
+setLoading(true);
+const url=await resolveCardmarketWithWorker();
+openUrl(url);
+}catch(error){
+console.error(error);
+showToast(error.message||"Cardmarket-Suche fehlgeschlagen");
+setLoading(false);
+}
+return;
+}
+openUrl(buildUrl(source));
+}
+function setLoading(isLoading){
+document.querySelectorAll("[data-source='cardmarket'],#cmSticky,form .primary-btn").forEach(btn=>{
+if(!btn)return;
+btn.classList.toggle("loading",isLoading);
+if(btn.tagName==="BUTTON")btn.disabled=isLoading;
+});
+}
 function appendText(text){const current=cleanQuery(),parts=current?current.split(/\s+/):[],lower=parts.map(p=>p.toLowerCase());text.split(/\s+/).forEach(p=>{if(!lower.includes(p.toLowerCase())){parts.push(p);lower.push(p.toLowerCase())}});queryInput.value=parts.join(" ");focusSearch()}
 function getRecent(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch(e){return[]}}
 function setRecent(items){localStorage.setItem(STORAGE_KEY,JSON.stringify(items.slice(0,8)))}
@@ -105,7 +149,16 @@ clearRecent.addEventListener("click",()=>{localStorage.removeItem(STORAGE_KEY);r
 if(languageButtons){languageButtons.querySelectorAll("[data-lang]").forEach(btn=>btn.addEventListener("click",()=>{languageButtons.querySelectorAll("[data-lang]").forEach(b=>b.classList.remove("active"));btn.classList.add("active");updatePreview()}))}
 [sellerCountrySelect,minConditionSelect].forEach(el=>{if(el)el.addEventListener("change",updatePreview)});
 queryInput.addEventListener("input",updatePreview);
-copyCmUrl.addEventListener("click",()=>{const url=buildUrl("cardmarket");if(!url){showToast("Bitte Suchbegriff eingeben");return}navigator.clipboard.writeText(url).then(()=>showToast("CM-URL kopiert")).catch(()=>showToast("Kopieren nicht möglich"))});
+copyCmUrl.addEventListener("click",async()=>{
+try{
+const url=await resolveCardmarketWithWorker();
+if(!url){showToast("Bitte Suchbegriff eingeben");return}
+await navigator.clipboard.writeText(url);
+showToast("Gefilterte CM-URL kopiert");
+}catch(error){
+showToast(error.message||"Kopieren nicht möglich");
+}
+});
 updatePreview();
 renderRecent();focusSearch();
 })();
