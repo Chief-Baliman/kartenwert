@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ChiefCards Kartenwert Schnellcheck v13</title>
-<!-- ChiefCards Kartenwert Schnellcheck v13 -->
+<title>ChiefCards Kartenwert Schnellcheck v16</title>
+<!-- ChiefCards Kartenwert Schnellcheck v16 -->
 <style>
 :root{--blue:#063692;--blue2:#041f5e;--gold:#e9a846;--bg:#f3f6fc;--card:#fff;--text:#111827;--muted:#6b7280;--border:#d9e2f3;--soft:#eef4ff}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -39,7 +39,7 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 </head>
 <body>
 <main class="app">
-<section class="topbar"><h1 class="title">Kartenwert Check</h1><p class="subtitle">Ein Suchbegriff, direkte Checks auf Cardmarket, eBay Sold und weiteren Preisquellen.</p></section>
+<section class="topbar"><h1 class="title">Kartenwert Check</h1><p class="subtitle">Ein Suchbegriff, direkte Checks auf Cardmarket, DoubleHolo Marketplace, eBay Sold, 130point und PriceCharting.</p></section>
 <section class="card">
 <form id="searchForm" class="search-wrap">
 <h2 class="section-title">Welche Karte willst du prüfen?</h2>
@@ -47,13 +47,14 @@ button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-he
 <button class="primary-btn" type="submit">Cardmarket DE öffnen</button>
 <div class="source-grid">
 <button class="secondary-btn" type="button" data-source="cardmarket"><strong>Cardmarket</strong><span>Auto-Treffer</span></button>
+<button class="secondary-btn" type="button" data-source="doubleHolo"><strong>DoubleHolo</strong><span>Marketplace Suche</span></button>
 <button class="secondary-btn" type="button" data-source="ebaySold"><strong>eBay Sold</strong><span>echte Verkäufe</span></button>
 <button class="secondary-btn" type="button" data-source="130point"><strong>130point</strong><span>Sold Recherche</span></button>
 <button class="secondary-btn" type="button" data-source="googleCardmarket"><strong>CM Google</strong><span>erster Treffer</span></button>
 </div>
 <div class="source-grid">
 <button class="secondary-btn" type="button" data-source="pricecharting"><strong>PriceCharting</strong><span>Grading Preise</span></button>
-<button class="secondary-btn" type="button" data-source="psaPop"><strong>PSA Suche</strong><span>Pop / Cert</span></button>
+
 <button class="secondary-btn" type="button" data-source="ebayActive"><strong>eBay aktiv</strong><span>Angebote</span></button>
 <button class="secondary-btn" type="button" data-source="googleImages"><strong>Bilder</strong><span>Check Artwork</span></button>
 </div>
@@ -97,12 +98,12 @@ function cleanQuery(){return queryInput.value.trim()}
 function enc(v){return encodeURIComponent(v)}
 function cmBase(){return cmLangSelect.value==="de"?"https://www.cardmarket.com/de/Pokemon":"https://www.cardmarket.com/en/Pokemon"}
 function getSelectedCardLanguage(){const active=languageButtons ? languageButtons.querySelector("button.active") : null;if(!active)return "3";const txt=(active.textContent||"").trim().toLowerCase();if(txt==="englisch")return "1";if(txt==="deutsch")return "3";if(txt==="japanisch")return "7";if(txt==="chinesisch")return "11";if(txt==="koreanisch")return "10";if(txt==="alle")return "";return String(active.getAttribute("data-lang")||"3")}
-function updatePreview(){const p=document.getElementById("cmPreview");if(!p)return;const language=getSelectedCardLanguage()||"alle";const country=sellerCountrySelect.value||"alle";const condition=minConditionSelect.value||"alle";p.textContent="V13 Worker aktiv: language="+language+" · sellerCountry="+country+" · minCondition="+condition}
+function updatePreview(){const p=document.getElementById("cmPreview");if(!p)return;const language=getSelectedCardLanguage()||"alle";const country=sellerCountrySelect.value||"alle";const condition=minConditionSelect.value||"alle";p.textContent="V16 Worker aktiv: language="+language+" · sellerCountry="+country+" · minCondition="+condition}
 function cmFilterParams(){const parts=["searchString="+enc(cleanQuery())];const language=getSelectedCardLanguage();if(sellerCountrySelect.value)parts.push("sellerCountry="+enc(sellerCountrySelect.value));if(language)parts.push("language="+enc(language));if(minConditionSelect.value)parts.push("minCondition="+enc(minConditionSelect.value));return parts.join("&")}
 function appendCmFiltersToUrl(url){try{const u=new URL(url);const language=getSelectedCardLanguage();if(language)u.searchParams.set("language",language);if(sellerCountrySelect.value)u.searchParams.set("sellerCountry",sellerCountrySelect.value);if(minConditionSelect.value)u.searchParams.set("minCondition",minConditionSelect.value);return u.toString()}catch(error){return url}}
 function getFilteredProductUrl(){const raw=(productUrlInput&&productUrlInput.value?productUrlInput.value.trim():"")||cleanQuery();if(!/^https?:\/\/(www\.)?cardmarket\.com\//i.test(raw))return "";return appendCmFiltersToUrl(raw)}
 function cmGoogleQuery(){return "site:cardmarket.com/de/Pokemon/Products/Singles "+cleanQuery()+" Cardmarket"}
-function buildUrl(source){const q=cleanQuery();if(!q)return "";const e=enc(q);if(/^https?:\/\/(www\.)?cardmarket\.com\//i.test(q))return appendCmFiltersToUrl(q);if(source==="cardmarket")return cmBase()+"/Products/Search?"+cmFilterParams();if(source==="googleCardmarket")return "https://www.google.com/search?q="+enc(cmGoogleQuery());if(source==="ebaySold")return "https://www.ebay.de/sch/i.html?_nkw="+e+"&_sacat=0&LH_Complete=1&LH_Sold=1";if(source==="ebayActive")return "https://www.ebay.de/sch/i.html?_nkw="+e+"&_sacat=0";if(source==="130point")return "https://130point.com/sales/?search="+e;if(source==="pricecharting")return "https://www.pricecharting.com/search-products?q="+e+"&type=prices";if(source==="psaPop")return "https://www.psacard.com/pop/search?term="+e;if(source==="googleImages")return "https://www.google.com/search?tbm=isch&q="+enc(q+" pokemon card");return cmBase()+"/Products/Search?"+cmFilterParams()}
+function buildUrl(source){const q=cleanQuery();if(!q)return "";const e=enc(q);if(/^https?:\/\/(www\.)?cardmarket\.com\//i.test(q))return appendCmFiltersToUrl(q);if(source==="cardmarket")return cmBase()+"/Products/Search?"+cmFilterParams();if(source==="googleCardmarket")return "https://www.google.com/search?q="+enc(cmGoogleQuery());if(source==="ebaySold")return "https://www.ebay.de/sch/i.html?_nkw="+e+"&_sacat=0&LH_Complete=1&LH_Sold=1";if(source==="ebayActive")return "https://www.ebay.de/sch/i.html?_nkw="+e+"&_sacat=0";if(source==="130point")return "https://130point.com/sales/?search="+e;if(source==="pricecharting")return "https://www.pricecharting.com/search-products?q="+e+"&type=prices";if(source==="googleImages")return "https://www.google.com/search?tbm=isch&q="+enc(q+" pokemon card");return cmBase()+"/Products/Search?"+cmFilterParams()}
 async function resolveCardmarketWithWorker(){
 const query=cleanQuery();
 if(!query)return null;
@@ -122,6 +123,14 @@ const msg=(data&&data.error)?data.error:"Cardmarket-Treffer nicht gefunden";
 throw new Error(msg);
 }
 return data;
+}
+function buildDoubleHoloMarketplaceUrl(){
+const query=cleanQuery();
+if(!query)return "";
+if(/^https?:\/\/(www\.)?doubleholo\.com\//i.test(query))return query;
+const params=new URLSearchParams();
+params.set("q",query);
+return "https://doubleholo.com/marketplace?"+params.toString();
 }
 function openUrl(url){if(!url){showToast("Bitte Suchbegriff eingeben");focusSearch();return}if(openModeSelect.value==="new"){window.open(url,"_blank","noopener,noreferrer");setTimeout(()=>setLoading(false),500)}else window.location.href=url}
 async function openSource(source){
@@ -146,6 +155,15 @@ setLoading(false);
 }
 return;
 }
+if(source==="doubleHolo"){
+const url=buildDoubleHoloMarketplaceUrl();
+if(!url){showToast("Bitte Suchbegriff eingeben");focusSearch();return}
+setLastAccessStatus({source:"doubleholo-search"});
+updateRecentSource(q,"doubleholo-search");
+showToast("DoubleHolo Suche geöffnet");
+openUrl(url);
+return;
+}
 openUrl(buildUrl(source));
 }
 function setLoading(isLoading){
@@ -158,12 +176,12 @@ if(btn.tagName==="BUTTON")btn.disabled=isLoading;
 function appendText(text){const current=cleanQuery(),parts=current?current.split(/\s+/):[],lower=parts.map(p=>p.toLowerCase());text.split(/\s+/).forEach(p=>{if(!lower.includes(p.toLowerCase())){parts.push(p);lower.push(p.toLowerCase())}});queryInput.value=parts.join(" ");focusSearch()}
 function getRecent(){try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");return raw.map(item=>typeof item==="string"?{query:item,source:"unknown"}:item).filter(item=>item&&item.query)}catch(e){return[]}}
 function setRecent(items){localStorage.setItem(STORAGE_KEY,JSON.stringify(items.slice(0,8)))}
-function sourceMeta(source){if(source==="cache")return{icon:"✓",label:"Cache",cls:"cache"};if(source==="serper")return{icon:"●",label:"Neu",cls:"serper"};if(source==="manual")return{icon:"M",label:"Manuell",cls:"manual"};if(source==="direct-url")return{icon:"↗",label:"Direkt",cls:"manual"};return{icon:"?",label:"Offen",cls:"manual"}}
+function sourceMeta(source){if(source==="cache")return{icon:"✓",label:"Cache",cls:"cache"};if(source==="serper")return{icon:"●",label:"Neu",cls:"serper"};if(source==="manual")return{icon:"M",label:"Manuell",cls:"manual"};if(source==="doubleholo-search")return{icon:"D",label:"DH Suche",cls:"manual"};if(source==="direct-url")return{icon:"↗",label:"Direkt",cls:"manual"};return{icon:"?",label:"Offen",cls:"manual"}}
 function addRecent(q,source="unknown"){const c=q.trim();if(!c)return;const items=getRecent().filter(i=>i.query.toLowerCase()!==c.toLowerCase());items.unshift({query:c,source,ts:new Date().toISOString()});setRecent(items);renderRecent()}
 function updateRecentSource(q,source){const c=(q||"").trim();if(!c)return;const items=getRecent();const item=items.find(i=>i.query.toLowerCase()===c.toLowerCase());if(item){item.source=source;item.ts=new Date().toISOString();setRecent(items);renderRecent()}}
 function renderRecent(){const items=getRecent();recentCard.classList.toggle("hidden",!items.length);recentList.innerHTML="";items.forEach(item=>{const meta=sourceMeta(item.source);const b=document.createElement("button");b.type="button";b.className="recent-item";b.innerHTML='<span class="recent-left"><span class="recent-icon '+meta.cls+'">'+meta.icon+'</span><strong></strong></span><span></span>';b.querySelector("strong").textContent=item.query;b.querySelector(".recent-item > span:last-child").textContent=meta.label;b.addEventListener("click",()=>{queryInput.value=item.query;openSource("cardmarket")});recentList.appendChild(b)})}
 function showToast(t){toast.textContent=t;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1500)}
-function setLastAccessStatus(result){const el=document.getElementById("lastAccessStatus");if(!el)return;if(!result){el.textContent="Letzter Zugriff: noch keiner";return}if(result.source==="cache")el.textContent="Letzter Zugriff: Cache ✓ · keine Serper-Anfrage verbraucht";else if(result.source==="serper")el.textContent="Letzter Zugriff: Neu gesucht und gespeichert ● · Serper-Anfrage verbraucht";else if(result.source==="direct-url")el.textContent="Letzter Zugriff: direkte Cardmarket-URL ↗";else el.textContent="Letzter Zugriff: "+(result.source||"unbekannt")}
+function setLastAccessStatus(result){const el=document.getElementById("lastAccessStatus");if(!el)return;if(!result){el.textContent="Letzter Zugriff: noch keiner";return}if(result.source==="cache")el.textContent="Letzter Zugriff: Cache ✓ · keine Serper-Anfrage verbraucht";else if(result.source==="serper")el.textContent="Letzter Zugriff: Neu gesucht und gespeichert ● · Serper-Anfrage verbraucht";else if(result.source==="doubleholo-search")el.textContent="Letzter Zugriff: DoubleHolo Marketplace-Suche · keine Serper-Anfrage verbraucht";else if(result.source==="direct-url")el.textContent="Letzter Zugriff: direkte Cardmarket-URL ↗";else el.textContent="Letzter Zugriff: "+(result.source||"unbekannt")}
 form.addEventListener("submit",e=>{e.preventDefault();openSource("cardmarket")});
 document.querySelectorAll("[data-source]").forEach(b=>b.addEventListener("click",()=>openSource(b.dataset.source)));
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>appendText(b.dataset.add)));
