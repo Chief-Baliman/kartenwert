@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ChiefCards Kartenwert Schnellcheck</title>
+<style>
+:root{--blue:#063692;--blue2:#041f5e;--gold:#e9a846;--bg:#f3f6fc;--card:#fff;--text:#111827;--muted:#6b7280;--border:#d9e2f3;--soft:#eef4ff}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{background:radial-gradient(circle at 0 0,rgba(233,168,70,.16),transparent 28%),radial-gradient(circle at 100% 8%,rgba(6,54,146,.12),transparent 30%),var(--bg)}
+button,input,select{font:inherit}.app{width:min(100%,860px);margin:0 auto;min-height:100vh;padding:max(14px,env(safe-area-inset-top)) 12px max(22px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.topbar{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-radius:26px;padding:18px;box-shadow:0 20px 44px rgba(6,54,146,.18)}
+.title{margin:0;font-size:clamp(28px,8.6vw,54px);line-height:.95;letter-spacing:-.05em;font-weight:1000}.subtitle{margin:8px 0 0;font-size:14px;line-height:1.35;color:rgba(255,255,255,.85)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:26px;padding:16px;box-shadow:0 18px 40px rgba(6,54,146,.10)}
+.section-title{margin:0 0 12px;color:var(--blue);font-size:18px;font-weight:1000}.search-wrap{display:grid;gap:12px}
+.search-input{width:100%;min-height:176px;border:3px solid #e7b659;border-radius:26px;padding:20px 18px;font-size:34px;line-height:1.06;font-weight:900;background:#fff;color:var(--text);box-shadow:inset 0 0 0 4px rgba(233,168,70,.16)}
+.search-input::placeholder{color:#a3a3a3;font-weight:850}.search-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 5px rgba(233,168,70,.18),inset 0 0 0 4px rgba(233,168,70,.16)}
+.primary-btn,.secondary-btn,.mini-btn,.chip{border:0;cursor:pointer;font-weight:1000;transition:transform .04s ease}.primary-btn:active,.secondary-btn:active,.mini-btn:active,.chip:active{transform:scale(.99)}
+.primary-btn{width:100%;min-height:86px;padding:18px 20px;background:var(--gold);color:#13213d;border-radius:22px;font-size:25px;box-shadow:0 14px 28px rgba(233,168,70,.28)}
+.source-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.secondary-btn{min-height:72px;padding:14px 16px;background:#f1f5ff;color:var(--blue);border:1px solid var(--border);border-radius:22px;font-size:19px}
+.secondary-btn strong{display:block;font-size:20px;line-height:1.1}.secondary-btn span{display:block;margin-top:3px;font-size:12px;color:var(--muted);font-weight:800}
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:12px;color:var(--muted);font-weight:900}
+.field select{min-height:54px;padding:10px 12px;border:1px solid var(--border);border-radius:16px;background:#fff;color:var(--text);font-size:16px;font-weight:800;width:100%}
+.hint{margin:0;color:var(--muted);font-size:14px;line-height:1.45}.chips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chip{min-height:62px;border:1px solid var(--border);background:var(--soft);color:var(--blue);border-radius:18px;padding:12px 14px;font-size:19px;text-align:center}
+.recent-list{display:grid;gap:10px}.recent-item{width:100%;border:1px solid var(--border);background:#fbfcff;border-radius:18px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;text-align:left}
+.recent-item strong{font-size:18px;line-height:1.2}.recent-item span{color:var(--blue);font-size:16px;font-weight:1000;white-space:nowrap}
+.small-link{border:0;background:transparent;color:var(--muted);padding:2px 0 0;font-size:15px;font-weight:800;cursor:pointer;text-align:left}
+.sticky-bar{position:sticky;bottom:calc(env(safe-area-inset-bottom) + 10px);display:grid;gap:8px;padding-top:6px;margin-top:auto;z-index:5}.sticky-shell{background:rgba(243,246,252,.92);border:1px solid rgba(217,226,243,.9);box-shadow:0 10px 28px rgba(17,24,39,.08);backdrop-filter:blur(10px);border-radius:26px;padding:10px;display:grid;gap:8px}
+.sticky-main{min-height:84px;font-size:24px}.sticky-sub{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mini-btn{min-height:58px;background:#f1f5ff;color:var(--blue);border:1px solid var(--border);border-radius:18px;font-size:17px;padding:12px}
+.toast{position:fixed;left:50%;transform:translateX(-50%) translateY(10px);bottom:calc(env(safe-area-inset-bottom) + 112px);background:#111827;color:#fff;padding:11px 14px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.18s;z-index:20;white-space:nowrap}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.hidden{display:none!important}@media(max-width:430px){.search-input{min-height:190px;font-size:36px}.primary-btn{min-height:90px;font-size:26px}.secondary-btn{min-height:76px}.chip{min-height:68px;font-size:20px}.option-grid{grid-template-columns:1fr}}
+@media(min-width:760px){.app{padding-top:22px}.card{padding:18px}.search-input{min-height:154px;font-size:30px}.chips-grid{grid-template-columns:repeat(3,1fr)}.recent-list{grid-template-columns:1fr 1fr}.source-grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<main class="app">
+<section class="topbar"><h1 class="title">Kartenwert Check</h1><p class="subtitle">Ein Suchbegriff, direkte Checks auf Cardmarket, eBay Sold und weiteren Preisquellen.</p></section>
+<section class="card">
+<form id="searchForm" class="search-wrap">
+<h2 class="section-title">Welche Karte willst du prüfen?</h2>
+<input id="query" class="search-input" type="search" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="z. B. pikachu 123 psa 10">
+<button class="primary-btn" type="submit">Cardmarket öffnen</button>
+<div class="source-grid">
+<button class="secondary-btn" type="button" data-source="cardmarket"><strong>Cardmarket</strong><span>EU Marktpreise</span></button>
+<button class="secondary-btn" type="button" data-source="ebaySold"><strong>eBay Sold</strong><span>echte Verkäufe</span></button>
+<button class="secondary-btn" type="button" data-source="130point"><strong>130point</strong><span>Sold Recherche</span></button>
+<button class="secondary-btn" type="button" data-source="googleCardmarket"><strong>CM Google</strong><span>Fallback</span></button>
+</div>
+<div class="source-grid">
+<button class="secondary-btn" type="button" data-source="pricecharting"><strong>PriceCharting</strong><span>Grading Preise</span></button>
+<button class="secondary-btn" type="button" data-source="psaPop"><strong>PSA Suche</strong><span>Pop / Cert</span></button>
+<button class="secondary-btn" type="button" data-source="ebayActive"><strong>eBay aktiv</strong><span>Angebote</span></button>
+<button class="secondary-btn" type="button" data-source="googleImages"><strong>Bilder</strong><span>Check Artwork</span></button>
+</div>
+<div class="option-grid">
+<div class="field"><label for="cardmarketLang">Cardmarket</label><select id="cardmarketLang"><option value="en">Englisch</option><option value="de">Deutsch</option></select></div>
+<div class="field"><label for="openMode">Öffnen</label><select id="openMode"><option value="same">gleicher Tab</option><option value="new">neuer Tab</option></select></div>
+</div>
+<p class="hint">Cardmarket öffnet die Produktsuche. Für schwierige Karten ist „CM Google“ oft der beste Fallback.</p>
+</form>
+</section>
+<section class="card"><h2 class="section-title">Schnelle Zusätze</h2><div class="chips-grid">
+<button class="chip" type="button" data-add="psa 10">+ PSA 10</button><button class="chip" type="button" data-add="psa 9">+ PSA 9</button><button class="chip" type="button" data-add="psa 8">+ PSA 8</button><button class="chip" type="button" data-add="japanese">+ Japanese</button><button class="chip" type="button" data-add="german">+ German</button><button class="chip" type="button" data-add="english">+ English</button>
+</div></section>
+<section class="card" id="recentCard"><h2 class="section-title">Letzte Suchen</h2><div class="recent-list" id="recentList"></div><button class="small-link" id="clearRecent" type="button">Letzte Suchen löschen</button></section>
+<div class="sticky-bar"><div class="sticky-shell"><button class="primary-btn sticky-main" type="button" id="cmSticky">Cardmarket öffnen</button><div class="sticky-sub"><button class="mini-btn" type="button" id="ebaySticky">eBay Sold</button><button class="mini-btn" type="button" id="clearInput">Leeren</button></div></div></div>
+</main>
+<div class="toast" id="toast">Geöffnet</div>
+<script>
+(function(){
+const queryInput=document.getElementById("query"),form=document.getElementById("searchForm"),cmSticky=document.getElementById("cmSticky"),ebaySticky=document.getElementById("ebaySticky"),clearInput=document.getElementById("clearInput"),recentList=document.getElementById("recentList"),recentCard=document.getElementById("recentCard"),clearRecent=document.getElementById("clearRecent"),toast=document.getElementById("toast"),openModeSelect=document.getElementById("openMode"),cmLangSelect=document.getElementById("cardmarketLang");
+const STORAGE_KEY="ccCardValueRecent";
+function focusSearch(){setTimeout(()=>{queryInput.focus();queryInput.select()},120)}
+function cleanQuery(){return queryInput.value.trim()}
+function enc(v){return encodeURIComponent(v)}
+function cmBase(){return cmLangSelect.value==="de"?"https://www.cardmarket.com/de/Pokemon":"https://www.cardmarket.com/en/Pokemon"}
+function buildUrl(source){const q=cleanQuery();if(!q)return "";const e=enc(q);if(source==="cardmarket")return cmBase()+"/Products/Search?searchString="+e;if(source==="googleCardmarket")return "https://www.google.com/search?q="+enc("site:cardmarket.com/en/Pokemon "+q);if(source==="ebaySold")return "https://www.ebay.de/sch/i.html?_nkw="+e+"&_sacat=0&LH_Complete=1&LH_Sold=1";if(source==="ebayActive")return "https://www.ebay.de/sch/i.html?_nkw="+e+"&_sacat=0";if(source==="130point")return "https://130point.com/sales/?search="+e;if(source==="pricecharting")return "https://www.pricecharting.com/search-products?q="+e+"&type=prices";if(source==="psaPop")return "https://www.psacard.com/pop/search?term="+e;if(source==="googleImages")return "https://www.google.com/search?tbm=isch&q="+enc(q+" pokemon card");return cmBase()+"/Products/Search?searchString="+e}
+function openUrl(url){if(!url){showToast("Bitte Suchbegriff eingeben");focusSearch();return}if(openModeSelect.value==="new")window.open(url,"_blank","noopener,noreferrer");else window.location.href=url}
+function openSource(source){const q=cleanQuery();if(!q){showToast("Bitte Suchbegriff eingeben");focusSearch();return}addRecent(q);openUrl(buildUrl(source))}
+function appendText(text){const current=cleanQuery(),parts=current?current.split(/\s+/):[],lower=parts.map(p=>p.toLowerCase());text.split(/\s+/).forEach(p=>{if(!lower.includes(p.toLowerCase())){parts.push(p);lower.push(p.toLowerCase())}});queryInput.value=parts.join(" ");focusSearch()}
+function getRecent(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch(e){return[]}}
+function setRecent(items){localStorage.setItem(STORAGE_KEY,JSON.stringify(items.slice(0,8)))}
+function addRecent(q){const c=q.trim();if(!c)return;const items=getRecent().filter(i=>i.toLowerCase()!==c.toLowerCase());items.unshift(c);setRecent(items);renderRecent()}
+function renderRecent(){const items=getRecent();recentCard.classList.toggle("hidden",!items.length);recentList.innerHTML="";items.forEach(item=>{const b=document.createElement("button");b.type="button";b.className="recent-item";b.innerHTML="<strong></strong><span>Cardmarket</span>";b.querySelector("strong").textContent=item;b.addEventListener("click",()=>{queryInput.value=item;openSource("cardmarket")});recentList.appendChild(b)})}
+function showToast(t){toast.textContent=t;toast.classList.add("show");setTimeout(()=>toast.classList.remove("show"),1500)}
+form.addEventListener("submit",e=>{e.preventDefault();openSource("cardmarket")});
+document.querySelectorAll("[data-source]").forEach(b=>b.addEventListener("click",()=>openSource(b.dataset.source)));
+document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>appendText(b.dataset.add)));
+cmSticky.addEventListener("click",()=>openSource("cardmarket"));ebaySticky.addEventListener("click",()=>openSource("ebaySold"));clearInput.addEventListener("click",()=>{queryInput.value="";focusSearch()});
+clearRecent.addEventListener("click",()=>{localStorage.removeItem(STORAGE_KEY);renderRecent();focusSearch()});
+renderRecent();focusSearch();
+})();
+</script>
+</body>
+</html>
